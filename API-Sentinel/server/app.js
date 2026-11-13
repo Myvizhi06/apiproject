@@ -18,13 +18,13 @@ function createApp() {
   app.use(securityHeaders);
 
   // 2. CORS
-  app.use(
-    cors({
-      origin: '*', // Allow local frontend and external tools
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Simulator-Scenario', 'Idempotency-Key'],
-    })
-  );
+  const corsMiddleware = cors({
+    origin: '*', // Allow local frontend and external tools
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Simulator-Scenario', 'Idempotency-Key'],
+  });
+  app.use(corsMiddleware);
+  app.options('*', corsMiddleware);
 
   // 3. Body Parsers & Sanitization
   app.use(express.json({ limit: '5mb' }));

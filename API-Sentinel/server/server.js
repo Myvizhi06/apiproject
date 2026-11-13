@@ -14,6 +14,19 @@ async function startServer() {
   // Connect Database
   await connectDB();
 
+  // Auto-seed default demo operator & workflows if not already present
+  try {
+    const seed = require('./utils/seed');
+    const { User } = require('./models');
+    const demoExists = await User.findOne({ email: 'demo@apisentinel.dev' });
+    if (!demoExists) {
+      console.log('[Server] Seeding default academic demo operator...');
+      await seed();
+    }
+  } catch (seedErr) {
+    console.warn('[Server] Auto-seed check notice:', seedErr.message);
+  }
+
   const app = createApp();
   const server = http.createServer(app);
 
