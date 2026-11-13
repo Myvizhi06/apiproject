@@ -1,0 +1,13 @@
+{
+  "name": "api-sentinel-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd API-Sentinel && npm run dev",
+    "test": "cd API-Sentinel && npm test",
+    "seed": "cd API-Sentinel && npm run seed",
+    "build": "cd API-Sentinel && npm run build",
+    "start": "cd API-Sentinel && npm start"
+  }
+}
+

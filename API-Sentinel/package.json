@@ -1,0 +1,24 @@
+{
+  "name": "api-sentinel",
+  "version": "1.0.0",
+  "description": "API Sentinel – Automated API Workflow Verification and Failure Recovery System",
+  "private": true,
+  "scripts": {
+    "dev": "node start-dev.js",
+    "start": "node server/server.js",
+    "test": "cd server && npm test",
+    "seed": "cd server && npm run seed",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "api-testing",
+    "finite-state-machine",
+    "failure-recovery",
+    "idempotency",
+    "compiler-design",
+    "academic-project"
+  ],
+  "author": "Antigravity Engineering",
+  "license": "MIT"
+}
+
