@@ -4,7 +4,10 @@
 
 import axios from 'axios';
 
-const BACKEND_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const BACKEND_URL = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://apiproject-3ay5.onrender.com' : '')
+).replace(/\/$/, '');
 
 const api = axios.create({
   baseURL: BACKEND_URL ? `${BACKEND_URL}/api` : '/api',
