@@ -10,11 +10,14 @@ export function SocketProvider({ children }) {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // Connect directly to port 5000 when developing on port 5173 to avoid proxy ws drops
-    const socketUrl =
-      window.location.port === '5173'
-        ? `http://${window.location.hostname}:5000`
-        : window.location.origin;
+    // If explicit VITE_API_URL is configured (e.g. Vercel pointing to Render), use that;
+    // otherwise connect directly to port 5000 in local dev, or origin in production.
+    const configuredBackend = import.meta.env.VITE_API_URL;
+    const socketUrl = configuredBackend
+      ? configuredBackend.replace(/\/$/, '')
+      : window.location.port === '5173'
+      ? `http://${window.location.hostname}:5000`
+      : window.location.origin;
 
     const socketInstance = io(socketUrl, {
       auth: { token },

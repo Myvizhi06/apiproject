@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: api-sentinel-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: cd server && npm install && cd ../client && npm install && npm run build
+    startCommand: node server/server.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*"
