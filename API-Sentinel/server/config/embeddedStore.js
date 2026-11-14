@@ -192,11 +192,25 @@ class QueryCursor {
   }
 }
 
+const os = require('os');
+
 class EmbeddedStore {
   constructor() {
-    this.dataDir = path.join(__dirname, '../data');
-    if (!fs.existsSync(this.dataDir)) {
-      fs.mkdirSync(this.dataDir, { recursive: true });
+    const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+    this.dataDir = isServerless
+      ? path.join(os.tmpdir(), 'api-sentinel-data')
+      : path.join(__dirname, '../data');
+
+    try {
+      if (!fs.existsSync(this.dataDir)) {
+        fs.mkdirSync(this.dataDir, { recursive: true });
+      }
+    } catch (e) {
+      // In case __dirname is read-only on serverless, fallback to tmp
+      this.dataDir = path.join(os.tmpdir(), 'api-sentinel-data');
+      if (!fs.existsSync(this.dataDir)) {
+        fs.mkdirSync(this.dataDir, { recursive: true });
+      }
     }
     this.collections = {};
   }

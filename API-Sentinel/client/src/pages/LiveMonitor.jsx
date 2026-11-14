@@ -57,6 +57,36 @@ export function LiveMonitor() {
     fetchExecution();
   }, [id]);
 
+  // Polling fallback when WebSocket is inactive (e.g. Serverless environment)
+  useEffect(() => {
+    if (connected) return;
+    const isTerminal = ['COMPLETED', 'FAILED', 'CANCELLED'].includes(currentState);
+    if (isTerminal) return;
+
+    const timer = setInterval(async () => {
+      try {
+        const res = await executionAPI.get(id);
+        const exec = res.data.execution;
+        if (exec) {
+          setExecution(exec);
+          if (exec.fsmHistory && Array.isArray(exec.fsmHistory)) {
+            setFsmHistory(exec.fsmHistory);
+            if (exec.fsmHistory.length > 0) {
+              setCurrentState(exec.fsmHistory[exec.fsmHistory.length - 1].to);
+            }
+          }
+          if (exec.steps && exec.steps.length > 0) {
+            setActiveStep(exec.steps[exec.steps.length - 1]);
+          }
+        }
+      } catch (err) {
+        // Silent catch during periodic polling
+      }
+    }, 1500);
+
+    return () => clearInterval(timer);
+  }, [id, connected, currentState]);
+
   // Socket.IO event listeners
   useEffect(() => {
     if (!socket) return;

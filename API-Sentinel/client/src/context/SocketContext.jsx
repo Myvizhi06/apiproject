@@ -10,11 +10,9 @@ export function SocketProvider({ children }) {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // If explicit VITE_API_URL is configured (e.g. Vercel pointing to Render), use that;
-    // otherwise default to live Render backend in production, or localhost:5000 in local dev.
-    const configuredBackend =
-      import.meta.env.VITE_API_URL ||
-      (import.meta.env.PROD ? 'https://apiproject-3ay5.onrender.com' : null);
+    // If explicit VITE_API_URL is configured, use that;
+    // otherwise connect to localhost:5000 in local dev, or same origin in production.
+    const configuredBackend = import.meta.env.VITE_API_URL;
     const socketUrl = configuredBackend
       ? configuredBackend.replace(/\/$/, '')
       : window.location.port === '5173'
