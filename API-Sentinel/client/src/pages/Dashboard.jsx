@@ -232,27 +232,65 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="h-64 w-full">
+          <div className="h-64 w-full relative">
+            {(!stats?.trendChart || stats.trendChart.every((d) => (d.successful || 0) === 0 && (d.failed || 0) === 0)) && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0D1527]/70 backdrop-blur-[1px] rounded-xl text-center p-4 pointer-events-none">
+                <p className="text-xs font-medium text-slate-300">No execution activity recorded in the last 7 days</p>
+                <p className="text-[11px] text-slate-500 mt-1">Run a test workflow to populate real-time execution trends</p>
+              </div>
+            )}
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={stats?.trendChart || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={stats?.trendChart || []} margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366F1" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#6366F1" stopOpacity={0.45} />
+                    <stop offset="95%" stopColor="#6366F1" stopOpacity={0.02} />
                   </linearGradient>
                   <linearGradient id="colorFailed" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.45} />
+                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
-                <XAxis dataKey="date" stroke="#64748B" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
+                <XAxis
+                  dataKey="date"
+                  stroke="#64748B"
+                  fontSize={11}
+                  tickLine={false}
+                  tickFormatter={(val) => (val && val.length >= 10 ? val.slice(5) : val)}
+                />
+                <YAxis
+                  stroke="#64748B"
+                  fontSize={11}
+                  tickLine={false}
+                  allowDecimals={false}
+                  domain={[0, (dataMax) => Math.max(dataMax + 1, 4)]}
+                />
                 <Tooltip
                   contentStyle={{ backgroundColor: '#091020', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
                 />
-                <Area type="monotone" dataKey="successful" stroke="#6366F1" strokeWidth={2} fillOpacity={1} fill="url(#colorSuccess)" name="Completed" />
-                <Area type="monotone" dataKey="failed" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#colorFailed)" name="Failed" />
+                <Area
+                  type="monotone"
+                  dataKey="successful"
+                  stroke="#6366F1"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorSuccess)"
+                  name="Completed"
+                  dot={{ r: 3, fill: '#6366F1', strokeWidth: 1 }}
+                  activeDot={{ r: 5 }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="failed"
+                  stroke="#EF4444"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorFailed)"
+                  name="Failed"
+                  dot={{ r: 3, fill: '#EF4444', strokeWidth: 1 }}
+                  activeDot={{ r: 5 }}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>

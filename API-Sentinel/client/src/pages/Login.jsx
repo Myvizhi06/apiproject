@@ -19,7 +19,13 @@ export function Login() {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please verify credentials.');
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.message === 'Network Error' || !err.response) {
+        setError('Unable to reach backend server. If Render server was idle, please allow up to 45 seconds to wake up, then try again.');
+      } else {
+        setError('Login failed. Please verify credentials.');
+      }
     } finally {
       setSubmitting(false);
     }

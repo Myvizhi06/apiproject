@@ -4,6 +4,18 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://apiproject-3ay5.onrender.com/api/:path*"
+    },
+    {
+      "source": "/socket.io/:path*",
+      "destination": "https://apiproject-3ay5.onrender.com/socket.io/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://apiproject-3ay5.onrender.com/health"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

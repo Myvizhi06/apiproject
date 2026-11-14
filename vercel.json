@@ -3,16 +3,16 @@
   "outputDirectory": "API-Sentinel/client/dist",
   "rewrites": [
     {
-      "source": "/api",
-      "destination": "/api/index.js"
+      "source": "/api/:path*",
+      "destination": "https://apiproject-3ay5.onrender.com/api/:path*"
     },
     {
-      "source": "/api/:path*",
-      "destination": "/api/index.js"
+      "source": "/socket.io/:path*",
+      "destination": "https://apiproject-3ay5.onrender.com/socket.io/:path*"
     },
     {
       "source": "/health",
-      "destination": "/api/index.js"
+      "destination": "https://apiproject-3ay5.onrender.com/health"
     },
     {
       "source": "/(.*)",

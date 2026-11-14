@@ -31,7 +31,24 @@ function createApp() {
   app.use(express.urlencoded({ extended: true, limit: '5mb' }));
   app.use(sanitizeInput);
 
-  // 4. Health Check
+  // 4. Root Welcome & Health Check
+  app.get('/', (req, res) => {
+    res.json({
+      status: 'ONLINE',
+      service: 'API Sentinel Engine',
+      description: 'Distributed API Resilience & Self-Healing Testing Platform',
+      version: '1.0.0',
+      endpoints: {
+        health: '/health',
+        api: '/api',
+        auth: '/api/auth',
+        workflows: '/api/workflows',
+        analytics: '/api/analytics',
+      },
+      timestamp: new Date().toISOString(),
+    });
+  });
+
   app.get('/health', (req, res) => {
     res.json({
       status: 'UP',
