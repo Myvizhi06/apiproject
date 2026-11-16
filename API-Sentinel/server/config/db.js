@@ -22,13 +22,15 @@ async function connectDB() {
   // If memory DB explicitly requested or MONGODB_URI not set
   const uri = process.env.MONGODB_URI || config.MONGODB_URI;
 
-  // 1. Try Real MongoDB connection with a short 2-second timeout
+  // 1. Try Real MongoDB connection (with appropriate timeout for cloud vs local)
   if (uri && !config.USE_MEMORY_DB) {
+    const isCloud = uri.includes('mongodb+srv') || uri.includes('mongodb.net');
+    const timeoutMs = isCloud ? 10000 : 2500;
     try {
       console.log(`[Database] Attempting connection to MongoDB at: ${uri.replace(/\/\/[^:]+:[^@]+@/, '//***:***@')}`);
       await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 2000,
-        connectTimeoutMS: 2000,
+        serverSelectionTimeoutMS: timeoutMs,
+        connectTimeoutMS: timeoutMs,
       });
 
       dbState = {
